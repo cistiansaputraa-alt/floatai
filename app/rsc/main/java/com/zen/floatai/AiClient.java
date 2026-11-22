@@ -8,9 +8,12 @@ import org.json.JSONObject;
 import java.util.concurrent.TimeUnit;
 
 public class AiClient {
-    private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
-    private static final String API_KEY = "GROQ_KEY_DI_SINI";
-    private static final String MODEL = "llama-3.1-70b-versatile";
+    private static final String API_KEY = "AIza_GANTI_KEY_GEMINI_KAMU";
+    private static final String MODEL = "gemini-1.5-flash";
+    private static final String API_URL =
+            "https://generativelanguage.googleapis.com/v1beta/models/"
+            + MODEL + ":generateContent?key=" + API_KEY;
+
     private static final OkHttpClient http = new OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS).build();
@@ -23,14 +26,16 @@ public class AiClient {
                 + "Kalau esai, jawaban lengkap padat, bahasa Indonesia, tanpa pembuka. Soal: " + question;
         try {
             JSONObject body = new JSONObject();
-            body.put("model", MODEL);
-            body.put("temperature", 0.3);
-            body.put("messages", new JSONArray()
-                    .put(new JSONObject().put("role", "user").put("content", prompt)));
+            body.put("contents", new JSONArray()
+                    .put(new JSONObject()
+                            .put("parts", new JSONArray()
+                                    .put(new JSONObject().put("text", prompt)))));
+            body.put("generationConfig", new JSONObject()
+                    .put("temperature", 0.3));
 
             Request req = new Request.Builder()
                     .url(API_URL)
-                    .addHeader("Authorization", "Bearer " + API_KEY)
+                    .addHeader("Content-Type", "application/json")
                     .post(RequestBody.create(body.toString(), MediaType.parse("application/json")))
                     .build();
 
@@ -40,9 +45,18 @@ public class AiClient {
                 }
                 @Override public void onResponse(Call c, Response r) throws java.io.IOException {
                     try {
-                        JSONObject j = new JSONObject(r.body().string());
-                        String ans = j.getJSONArray("choices").getJSONObject(0)
-                                .getJSONObject("message").getString("content");
+                        String raw = r.body().string();
+                        JSONObject j = new JSONObject(raw);
+                        if (j.has("error")) {
+                            ui.post(() -> cb.onResult("[api] " + j.optJSONObject("error").optString("message")));
+                            return;
+                        }
+                        String ans = j.getJSONArray("candidates")
+                                .getJSONObject(0)
+                                .getJSONObject("content")
+                                .getJSONArray("parts")
+                                .getJSONObject(0)
+                                .getString("text");
                         ui.post(() -> cb.onResult(ans.trim()));
                     } catch (Exception e) {
                         ui.post(() -> cb.onResult("[parse] " + e.getMessage()));
