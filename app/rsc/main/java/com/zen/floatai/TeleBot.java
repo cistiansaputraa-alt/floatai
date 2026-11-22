@@ -6,8 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class TeleBot {
-    private static final String TOKEN = "BOT_TOKEN_DI_SINI";
-    private static final String ALLOWED_CHAT = "CHAT_ID_DI_SINI";
+    private static final String TOKEN = "8863561550:AAF5Yyfwoq4x2BYUyrXh3_PT5EBl2IGthfk";
+    private static final String ALLOWED_CHAT = "5612600300";
     private static volatile boolean running = false;
     private static long lastUpdate = 0;
     private static FloatService svc;
