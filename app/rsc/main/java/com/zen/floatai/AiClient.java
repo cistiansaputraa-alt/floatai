@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import java.util.concurrent.TimeUnit;
 
 public class AiClient {
-    private static final String API_KEY = "AIza_GANTI_KEY_GEMINI_KAMU";
+    private static final String API_KEY = "AQ.Ab8RN6JOdQ0jUwB9ZJXAZ2Chb0IZ6XI7pC_rOpwVV_ZteD-JKw";
     private static final String MODEL = "gemini-1.5-flash";
     private static final String API_URL =
             "https://generativelanguage.googleapis.com/v1beta/models/"
