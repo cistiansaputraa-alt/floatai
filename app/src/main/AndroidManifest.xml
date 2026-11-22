@@ -11,7 +11,6 @@
     <application
         android:allowBackup="false"
         android:label="System Helper"
-        android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
 
@@ -27,16 +26,6 @@
             android:foregroundServiceType="specialUse">
             <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="overlay_assistant"/>
-        </service>
-
-        <service android:name=".FloatAccService"
-            android:exported="false"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
-            </intent-filter>
-            <meta-data android:name="android.accessibilityservice"
-                android:resource="@xml/accessibility_config"/>
         </service>
 
         <receiver android:name=".BootReceiver" android:exported="true">
